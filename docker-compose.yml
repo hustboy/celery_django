@@ -1,0 +1,126 @@
+version: "3"
+services:
+
+  db:
+    image: postgres:latest
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+      - ~/pgdata:/var/lib/postgresql/data/
+
+  rabbitmq:
+    image: rabbitmq:3.7.0-management
+    restart: always
+    ports:
+      - "5673:5672" # we forward this port because it's useful for debugging
+      - "15673:15672"  # here, we can access rabbitmq management plugin
+# To turn on management: docker exec [CONTAINER_NAME] rabbitmq-plugins enable rabbitmq_management
+    volumes:
+      - ~/rabbitmqdata:/var/lib/rabbitmq
+
+
+
+
+
+  web:
+    build: .
+    depends_on:
+      - db
+      - rabbitmq
+    command: python3 manage.py runserver 0.0.0.0:8000
+    volumes:
+      - mydata:/home/chenxi/PycharmProjects/filemanager/
+    ports:
+      - "8001:8000"
+
+  celeryworker:
+    build: .
+    depends_on:
+      - db
+      - rabbitmq
+    volumes:
+      - mydata:/home/chenxi/PycharmProjects/filemanager/
+    command: python3 -m celery -A filemanager.celery worker --loglevel INFO
+
+  celerybeat:
+    build: .
+    depends_on:
+      - db
+      - rabbitmq
+    volumes:
+      - mydata:/home/chenxi/PycharmProjects/filemanager/
+    command: python3 -m celery -A filemanager.celery beat --loglevel INFO
+
+  celeryflower:
+    build: .
+    ports:
+      - "5555:5555"
+    depends_on:
+      - rabbitmq
+    volumes:
+      - mydata:/home/chenxi/PycharmProjects/filemanager/
+    command: python3 -m celery flower --broker=amqp://guest:guest@rabbitmq:5672//
+
+
+volumes:
+  mydata:
+
+
+#version: "3"
+#services:
+#
+#  dev_db:
+#    image: postgres:latest
+#    restart: always
+#    ports:
+#      - "5433:5432"
+#    volumes:
+#      - ~/pgdata:/var/lib/postgresql/data/
+#
+#  dev_rabbitmq:
+#    image: rabbitmq:3.7.0-management
+#    restart: always
+#    ports:
+#      - "5674:5672" # we forward this port because it's useful for debugging
+#      - "15674:15672"  # here, we can access rabbitmq management plugin
+## To turn on management: docker exec [CONTAINER_NAME] rabbitmq-plugins enable rabbitmq_management
+#    volumes:
+#      - ~/rabbitmqdata:/var/lib/rabbitmq
+#
+#
+#  dev_web:
+#    build: .
+#    depends_on:
+#      - dev_db
+#      - dev_rabbitmq
+#    command: python3 manage.py runserver 0.0.0.0:8000
+#    volumes:
+#      - .:/code
+#    ports:
+#      - "8001:8000"
+#
+#  dev_celeryworker:
+#    build: .
+#    depends_on:
+#      - dev_db
+#      - dev_rabbitmq
+#    command: python3 -m celery -A filemanager.celery worker --loglevel INFO
+#
+#  dev_celerybeat:
+#    build: .
+#    depends_on:
+#      - dev_db
+#      - dev_rabbitmq
+#    command: python3 -m celery -A filemanager.celery beat --loglevel INFO
+#
+#  dev_celeryflower:
+#    build: .
+#    ports:
+#      - "5555:5555"
+#    depends_on:
+#      - dev_rabbitmq
+#    command: python3 -m celery flower --broker=amqp://guest:guest@dev_rabbitmq:5672//
+
+
+
