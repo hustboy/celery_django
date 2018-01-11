@@ -10,24 +10,7 @@ from hashlib import md5, sha1
 from zlib import crc32
 import datetime
 
-# logging.basicConfig(level=logfile.DEBUG,
-#                 format='%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s',
-#                 datefmt='%a, %d %b %Y %H:%M:%S',
-#                 filename=time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + 'applog.txt',
-#                 filemode='w')
-#
-# bscip = {'BSC33': '10.26.3.129', 'BSC42': '10.26.2.37', 'BSC45': '10.26.3.182', 'BSC45': '10.26.3.182',
-#       'BSC49': '10.26.3.185', 'BSC55': '10.26.2.51', 'BSC56': '10.26.2.54', 'BSC60': '10.26.2.57',
-#       'BSC67': '10.26.2.45', 'BSC79': '10.26.2.40', 'BSC88': '10.26.2.36'}
-# bscip1 = {'BSC79': '10.26.2.40', 'BSC88': '10.26.2.36'}
-# bscusername='wh1cx2'
-# bscpassword='aqyqZBT#27'
-# gsap1ip={'GS42': '10.26.3.163', 'GS43': '10.26.3.170', 'GS48': '10.26.3.176'}
-# gsap1username='admineric'
-# gsap1password='aqyqZBT#07'
-# gsap2ip={'GS42': '10.25.254.35', 'GS43': '10.25.254.38', 'GS48': '10.25.254.41'}
-# gsap1username='administrator'
-# gsap1password='aqyqZBT#23'
+
 config=configparser.ConfigParser()
 config.read("DumpRecord.ini")
 
