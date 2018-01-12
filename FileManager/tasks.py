@@ -151,7 +151,7 @@ def ftpdump(x):
     workbook.close()
 
     for key, value in gsap2ip.items():
-        ftpap1dump(key, value, gsap1username, gsap1password, fout, logftp, dumpdir, dumprecord)
+        ftpap2dump(key, value, gsap1username, gsap1password, fout, logftp, dumpdir, dumprecord)
 
 
     fp = open(dumpdir + '/mgwdump/md5check.txt', 'w')
